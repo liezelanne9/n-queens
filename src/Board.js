@@ -196,30 +196,33 @@ return colIndex - rowIndex;
       var rowIndex = 0;
       var colIndex = 0;
 
-      if (majorDiagonalColumnIndexAtFirstRow < 0) {
-        rowIndex = Math.abs(majorDiagonalColumnIndexAtFirstRow);
+      if (minorDiagonalColumnIndexAtFirstRow < this.get('n')) {
+        colIndex = minorDiagonalColumnIndexAtFirstRow;
       }
-      if (majorDiagonalColumnIndexAtFirstRow > 0) {
-        colIndex = majorDiagonalColumnIndexAtFirstRow;
+      if (minorDiagonalColumnIndexAtFirstRow >= this.get('n')) {
+        colIndex = this.get('n') - 1;
+        rowIndex = minorDiagonalColumnIndexAtFirstRow - this.get('n') + 1;
       }
 
       while (this._isInBounds(rowIndex, colIndex)){
+        //console.log(rowIndex, colIndex)
         if (this.get(rowIndex)[colIndex]) { //(0)[1] // (1)[1]
+          //console.log('Found')
           counter++;
         }
         if (counter > 1) {
           return true;
         }
         rowIndex++;
-        colIndex++;
+        colIndex--;
       }
       return false;
     },
 
     // test if any minor diagonals on this board contain conflicts
     hasAnyMinorDiagonalConflicts: function() {
-      for (var i = -this.get('n') + 1; i < this.get('n'); i++) {
-        if (this.hasMajorDiagonalConflictAt(i)) {
+      for (var i = 0; i <= 2*this.get('n') - 2; i++) {
+        if (this.hasMinorDiagonalConflictAt(i)) {
           return true;
         }
       }
