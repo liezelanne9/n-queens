@@ -134,28 +134,81 @@ window.countNRooksSolutions = function(n) {
 
 // return a matrix (an array of arrays) representing a single nxn chessboard, with n queens placed such that none of them can attack each other
 window.findNQueensSolution = function(n) {
-  var solution = []; //fixme
+  var solution = [];
 
+  
   // create empty board
   var board = new Board({n:n});
-
+  //extra hueristics: when recursing into next row, the 3 indices below your marked index
+  //(bottom left, bottom, bottom right) can be ignored
+  //Corners are FINEEE
+  //dead start = -2
+  var queenRecurse = function(level, dead) {
+    // when we've finished last row, push all board.gets to solution arr
+    if (level === n) {
+      solution = board.rows();
+      return;
+    }
+    for (var i = 0; i < n; i++) {
+      if (!((i >= (dead - 1) && i <= (dead + 1)) )) {
+        board.togglePiece(level, i);
+        if (!board.hasAnyQueenConflictsOn(level, i)) {
+          queenRecurse(level + 1, i)
+        }
+        if (solution.length > 0) { //only for this function
+          return; //if solution exists, return
+        }
+        board.togglePiece(level, i);
+      }
+    } 
+  }
+  
   // set up recursive function to traverse down rows
     //if out of bounds, you did it (base case)
       //here, we board.get all rows to reconstruct a full matrix
       //later, we keep going and increment counter
       //return
     // iterate through each column index to test if it hasAnyConflicts(rook/diagonal)  
+      //syntax is board.set(row number, row array)
       // if true, continue with iteration
         //if iterated to end, nothing happens
       // if false, execute next recursion
-
+        
+  queenRecurse(0, -2);
+  if (solution.length === 0) { //only for this function
+    solution = board.rows(); //if solution exists, return
+  }
   console.log('Single solution for ' + n + ' queens:', JSON.stringify(solution));
   return solution;
 };
 
 // return the number of nxn chessboards that exist, with n queens placed such that none of them can attack each other
 window.countNQueensSolutions = function(n) {
-  var solutionCount = undefined; //fixme
+  var solutionCount = 0;
+
+    // create empty board
+    var board = new Board({n:n});
+    //extra hueristics: when recursing into next row, the 3 indices below your marked index
+    //(bottom left, bottom, bottom right) can be ignored
+    //Corners are FINEEE
+    //dead start = -2
+    var queenRecurse = function(level, dead) {
+      // when we've finished last row, push all board.gets to solution arr
+      if (level === n) {
+        solutionCount++;
+        return;
+      }
+      for (var i = 0; i < n; i++) {
+        if (!((i >= (dead - 1) && i <= (dead + 1)) )) {
+          board.togglePiece(level, i);
+          if (!board.hasAnyQueenConflictsOn(level, i)) {
+            queenRecurse(level + 1, i)
+          }
+          board.togglePiece(level, i);
+        }
+      } 
+    }
+    queenRecurse(0, -2);
 
   console.log('Number of solutions for ' + n + ' queens:', solutionCount);
   return solutionCount;
