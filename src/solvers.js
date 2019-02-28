@@ -134,7 +134,20 @@ window.countNRooksSolutions = function(n) {
 
 // return a matrix (an array of arrays) representing a single nxn chessboard, with n queens placed such that none of them can attack each other
 window.findNQueensSolution = function(n) {
-  var solution = undefined; //fixme
+  var solution = []; //fixme
+
+  // create empty board
+  var board = new Board({n:n});
+
+  // set up recursive function to traverse down rows
+    //if out of bounds, you did it (base case)
+      //here, we board.get all rows to reconstruct a full matrix
+      //later, we keep going and increment counter
+      //return
+    // iterate through each column index to test if it hasAnyConflicts(rook/diagonal)  
+      // if true, continue with iteration
+        //if iterated to end, nothing happens
+      // if false, execute next recursion
 
   console.log('Single solution for ' + n + ' queens:', JSON.stringify(solution));
   return solution;
