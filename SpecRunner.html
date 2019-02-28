@@ -15,6 +15,7 @@
     <script src="lib/sinon/sinon.js"></script>
     <script>
       mocha.setup('bdd');
+      mocha.setup({slow: 0});
       window.expect = chai.expect;
       $(function() {
         window.mochaPhantomJS ? mochaPhantomJS.run() : mocha.run();

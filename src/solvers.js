@@ -38,72 +38,96 @@ window.countNRooksSolutions = function(n) {
 
 
 
-  //16 - 9 - 4 - 1
-  //n^2 (n-1)^2 (n-2)^2 ... 1
-  var nArr = [...Array(n).keys()]; //arr of 1 to n
-  var boardList = []; //supposed to keep unique board matrices
-  var coords = [];
-  var board = new Board({n:n});
+  // //16 - 9 - 4 - 1
+  // //n^2 (n-1)^2 (n-2)^2 ... 1
+  // var nArr = [...Array(n).keys()]; //arr of 1 to n
+  // var boardList = []; //supposed to keep unique board matrices
+  // var coords = [];
+  // var board = new Board({n:n});
 
-  var rookRecurse = function(iArr, jArr, coord) {
-    if (iArr.length === 1) {
-      coord.push([iArr[0], jArr[0]]);
-      var boardArr = []; // array of arrays for Board()
-      for (var k = 0; k < n; k++) { // iterating through each coordinate in coord
-        var newArray = [];
-        newArray.length = n;
-        newArray.fill(0, 0, n);
-        newArray[coord[k][1]] = 1;
-        boardArr[coord[k][0]] = newArray;
-      }
-      var inList = false;
-      for (var b = 0; b < boardList.length; b++) {
-        if (JSON.stringify(boardList[b]) === JSON.stringify(boardArr)) {
-          inList = true;
-        }
-      }
-      if (!inList) {
-        board.set(boardArr);
-        if (!board.hasAnyRooksConflicts()) {
-          solutionCount++;
-          boardList.push(boardArr);
-        }
-      }
-      coord.pop()
-      return;
-    }
+  // var rookRecurse = function(iArr, jArr, coord) {
+  //   //if 2 here
+  //   if (iArr.length === 2) {
+  //     coord.push([iArr[0], jArr[0]]);
+  //     rookRecurse([iArr[1]], [jArr[1]], coord);
+  //     coord.pop();
+  //     coord.push([iArr[0], jArr[1]]);
+  //     rookRecurse([iArr[1]], [jArr[0]], coord);
+  //     coord.pop();
+  //     return;
+  //   }
 
-    for (var i = 0; i < iArr.length; i++) { //[0,1]
-      for (var j = 0; j < jArr.length; j++) { //[0,1]
-        //record i,j
-        coord.push([iArr[i], jArr[j]]); //[0,0]
-        //new iArr doesn't have 0
-        //new jArr doesn't have 0
-        var iInd = iArr.indexOf(iArr[i]);
-        var jInd = jArr.indexOf(jArr[j]);
+  //   if (iArr.length === 1) {
+  //     coord.push([iArr[0], jArr[0]]);
+  //     //console.log('final coordinates: ', JSON.stringify(coord))
+  //     var boardArr = []; // array of arrays for Board()
+  //     for (var k = 0; k < n; k++) { // iterating through each coordinate in coord
+  //       var newArray = [];
+  //       newArray.length = n;
+  //       newArray.fill(0, 0, n);
+  //       newArray[coord[k][1]] = 1;
+  //       boardArr[coord[k][0]] = newArray;
+  //     }
+  //     var inList = false;
+  //     for (var b = 0; b < boardList.length; b++) {
+  //       if (JSON.stringify(boardList[b]) === JSON.stringify(boardArr)) {
+  //         inList = true;
+  //       }
+  //     }
+  //     if (!inList) {
+  //       board.set(boardArr);
+  //       if (!board.hasAnyRooksConflicts()) {
+  //         solutionCount++;
+  //         boardList.push(boardArr);
+  //       }
+  //     }
+  //     coord.pop()
+  //     return;
+  //   }
+
+  //   for (var i = 0; i < iArr.length; i++) { //[0,1]
+  //     for (var j = 0; j < jArr.length; j++) { //[0,1]
+  //       //record i,j
+  //       coord.push([iArr[i], jArr[j]]); //[0,0]
+  //       //new iArr doesn't have 0
+  //       //new jArr doesn't have 0
+  //       var iInd = iArr.indexOf(iArr[i]);
+  //       var jInd = jArr.indexOf(jArr[j]);
         
 
-        var newIArr = [...iArr];
-        newIArr.splice(iInd, 1);
-        var newJArr = [...jArr];
-        newJArr.splice(jInd, 1);
+  //       var newIArr = [...iArr];
+  //       newIArr.splice(iInd, 1);
+  //       var newJArr = [...jArr];
+  //       newJArr.splice(jInd, 1);
+
+  //       //if 2 here
+
+  //       rookRecurse(newIArr, newJArr, coord);
+  //       coord.pop();
 
 
-        rookRecurse(newIArr, newJArr, coord);
-        coord.pop();
+  //       //take nArr and create two new arrays, one without i, one without j
+  //       //recurse with these two new arrays as limits
+  //       //after full recursion, matrix generated
+  //       //input matrix as board, test for collisions
+  //       //update counter
+  //       //repeat loop
+  //     }
+  //   }
+  // }
 
-
-        //take nArr and create two new arrays, one without i, one without j
-        //recurse with these two new arrays as limits
-        //after full recursion, matrix generated
-        //input matrix as board, test for collisions
-        //update counter
-        //repeat loop
-      }
+  // rookRecurse(nArr, nArr, coords);
+  // WHO FUCKING NEEDS THIS ABOVE STUFF
+  var rookRecurse = function(n) {
+    if (n === 1) { // 1 base case
+      return 1;
     }
+    if (n === 2) { // 2 base case
+      return 2;
+    }
+    return n * rookRecurse(n-1); // factorial
   }
-
-  rookRecurse(nArr, nArr, coords);
+  solutionCount = rookRecurse(n)
   console.log('Number of solutions for ' + n + ' rooks:', solutionCount);
   return solutionCount;
 };
